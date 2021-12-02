@@ -22,13 +22,14 @@ export default {
   data(){
     return{
       searchFilm: "",
-      search: []
+      search: [],
+      searchSeries: []
     }
   },
   methods:{
     iniziaRicerca(film){
       this.searchFilm = film;
-            axios.get("https://api.themoviedb.org/3/search/movie", {
+          axios.get("https://api.themoviedb.org/3/search/movie", {
         params:{
           api_key: "e38bdf09ce9b884140ee0902c3248991",
           query : this.searchFilm

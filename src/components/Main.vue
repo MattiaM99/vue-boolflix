@@ -1,17 +1,30 @@
 <template>
   <main>
     <div class="container">
-      <ul class="list">
-        <li
-        v-for="(film, index) in callMain"
-        :key="index"
-        >
-          <h2>{{film.original_title}}</h2>
-          <h3>{{film.title}}</h3>
-          <h5>{{film.original_language}}</h5>
-          <p>{{film.original_vote_average}}</p>
-        </li>
-      </ul>
+      <div class="movies-section">
+        <ul class="list">
+          <li
+          v-for="(film, index) in callMain"
+          :key="index"
+          >
+            <h2>{{film.original_title}}</h2>
+            <h3>{{film.title}}</h3>
+            <p>{{film.original_vote_average}}</p>
+            <p class="language-cont">
+              <img
+            v-if="checkLanguage(film) !== ''"
+              :src="checkLanguage(film)" 
+              :alt="film.original_language">
+              <span v-else>
+                {{ film.original_language }}
+              </span>
+            </p>
+          </li>
+        </ul>
+      </div>
+       <div class="series-section">
+         
+      </div>
     </div>
   </main>
 </template>
@@ -25,9 +38,18 @@ export default {
     }
   },
   props:{
-    callMain: String
+    callMain: Array
   },
-  
+  methods: {
+    checkLanguage(content) {
+      const language = content.original_language;
+      let flag = '';
+      console.log('language', this.contents);
+      if (language.toLowerCase().includes('it')) return flag = require('../assets/img/it.png');
+      if (language.toLowerCase().includes('en')) return flag = require('../assets/img/en.png');
+      return flag;
+    }
+  }
 }
 </script>
 
@@ -57,6 +79,19 @@ main{
       overflow-y: scroll;
       scrollbar-color: black white;
       scrollbar-width: thin;
+    }
+    .language-cont{
+      width: 35px;
+      height: 25px;
+      background-color:black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:5px 4px 7px 3px grey;
+      color: white;
+    }
+    img{
+      width: 90%;
     }
   }
 }
