@@ -1,98 +1,74 @@
 <template>
-  <main>
-    <div class="container">
-      <div class="movies-section">
-        <ul class="list">
-          <li
-          v-for="(film, index) in callMain"
-          :key="index"
-          >
-            <h2>{{film.original_title}}</h2>
-            <h3>{{film.title}}</h3>
-            <p>{{film.original_vote_average}}</p>
-            <p class="language-cont">
-              <img
-            v-if="checkLanguage(film) !== ''"
-              :src="checkLanguage(film)" 
-              :alt="film.original_language">
-              <span v-else>
-                {{ film.original_language }}
-              </span>
-            </p>
-          </li>
-        </ul>
+  <main class="container-fluid pt-5 ">
+    <div 
+    v-if="type === 'all' || type === 'films' || type === ''"
+    class="film-container">
+      <h2>Film:</h2>
+      <div class="d-flex justify-content-center flex-wrap">
+        <Card  
+        v-for="film in films"
+        :key="film.id"
+        :title="film.title"
+        :originalTitle="film.original_title"
+        :language="film.original_language"
+        :vote="film.vote_average"
+        :image="film.poster_path"
+        :description="film.overview"/>
       </div>
-       <div class="series-section">
-         
+    </div>
+
+    <div 
+    v-if="type === 'all' || type === 'series' || type === ''"
+    class="serie-container">
+      <h2>Serie:</h2>
+      <div class="d-flex justify-content-center flex-wrap">
+        <Card 
+        v-for="serie in series"
+        :key="serie.id"
+        :title="serie.name"
+        :originalTitle="serie.original_name"
+        :language="serie.original_language"
+        :vote="serie.vote_average"
+        :image="serie.poster_path"
+        :description="serie.overview"/>
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import Card from './Card.vue'
 export default {
-  name: "Main",
+  name: 'Main',
+  components:{
+    Card
+  },
   data(){
     return{
-      string: ""
+     
     }
   },
   props:{
-    callMain: Array
+    films: Array,
+    series: Array,
+    type: String
   },
-  methods: {
-    checkLanguage(content) {
-      const language = content.original_language;
-      let flag = '';
-      console.log('language', this.contents);
-      if (language.toLowerCase().includes('it')) return flag = require('../assets/img/it.png');
-      if (language.toLowerCase().includes('en')) return flag = require('../assets/img/en.png');
-      return flag;
-    }
+  methods:{
   }
+  
 }
 </script>
 
-<style lang="scss">
-@import "../assets/style/vars.scss";
-
-main{
-  min-height: calc(100vh - 100px);
-  background-color: lighten(black, 10%);
-  .list{
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-
-    li{
-      text-align: center;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      display: flex;
-      line-height: 30px;
-      margin: 15px;
-      background-color: $card-color;
-      width: calc(100% / 5);
-      padding: 20px;
-      height:200px;
-      overflow-y: scroll;
-      scrollbar-color: black white;
-      scrollbar-width: thin;
-    }
-    .language-cont{
-      width: 35px;
-      height: 25px;
-      background-color:black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow:5px 4px 7px 3px grey;
-      color: white;
-    }
-    img{
-      width: 90%;
-    }
-  }
+<style lang="scss" scope>
+@import '../assets/style/vars.scss';
+h2{
+  color: $brand-color;
 }
+  main{
+  height: 100%;
+  background-image: linear-gradient(to bottom,
+    lighten(black, 100%),
+    lighten(black, 5%)
+  )
+  }
 </style>

@@ -1,60 +1,70 @@
 <template>
-  <header>
-    <h1>BOOLFLIX</h1>
-    <div>
+  <header class="d-flex justify-content-between align-items-center">
+    <a href="http://localhost:8080/"><h1>BOOLFLIX</h1></a>   
+    <div class="input-group mb-3 search-film">
       <input 
-      v-model="searchBar"
-      @keyup.enter="search"
+      @keyup.enter="searchFilm()"
+      v-model="filmToSearch"
       type="text" 
-      placeholder="Che film stai cercando?">
-      <button
-      @click="$emit('search', searchBar)"
-      >Cerca</button>
+      class="form-control" 
+      placeholder="Che film stai cercando?" 
+      >
+      <button 
+      @click="searchFilm()"
+      class="btn btn-outline-danger" 
+      type="button">Search</button>
+    <select 
+    v-model="type"
+    @change="$emit('sendType', type)"
+    class="form-select" 
+    aria-label="Default select example">
+      <option value="all" selected>All</option>
+      <option value="films">Films</option>
+      <option value="series">Series</option>
+    </select>
     </div>
   </header>
 </template>
 
 <script>
 export default {
-  name: "Header",
+  name: 'Header',
   data(){
     return{
-      searchBar: ""
+      filmToSearch: '',
+      type:''
     }
   },
   methods:{
-    search(){
-      this.$emit("search", this.searchBar);
-      this.searchBar = "";
+    searchFilm(){
+      this.$emit('sendSearch', this.filmToSearch)
+      console.log(this.filmToSearch);
     }
-  },
-  mounted(){
-    this.search()
   }
 }
 </script>
 
-<style lang="scss">
-@import "../assets/style/vars.scss";
+<style lang="scss" scope>
+@import '../assets/style/vars.scss';
 header{
-  height: 100px;
-  background-color: black;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 25px;
+  height: 150px;
+  margin: 0 30px;
+  a{
+    text-decoration: none;
+  }
   h1{
     color: $brand-color;
   }
-  input{
-    font-size: 20px;
-    padding: 15px 30px;
-  }
-  button{
-    padding: 10px 15px;
-    margin-left: 15px;
-    font-size: 15px;
-    cursor: pointer;
+  .search-film{
+    width: 30%;
+    input{
+      width: 250px !important;
+      height: 50px;
+      flex: none !important;
+    }
+  } 
+  .form-select{
+    height: 50px;
   }
 }
 </style>

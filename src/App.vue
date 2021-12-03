@@ -1,18 +1,19 @@
 <template>
-  <div>
-    <Header 
-      @search="iniziaRicerca"
-    />
+  <div id="app">
+    <Header @sendSearch="getFilm"
+    @sendType="foundType"/>
     <Main 
-      :callMain="search"
-    />
+    v-if="films.length !== 0 || series.length !== 0"
+    :films="films"
+    :series="series"
+    :type="type"/>
   </div>
 </template>
 
 <script>
-import Header from "./components/Header.vue"
-import Main from "./components/Main.vue"
-import axios from "axios"
+import Header from './components/Header.vue'
+import Main from './components/Main.vue'
+import axios from 'axios'
 export default {
   name: 'App',
   components: {
@@ -21,34 +22,53 @@ export default {
   },
   data(){
     return{
-      searchFilm: "",
-      search: [],
-      searchSeries: []
+      films: [],
+      series: [],
+      type:'',
+      urlMovie: 'https://api.themoviedb.org/3/search/movie',
+      urlTv: 'https://api.themoviedb.org/3/search/tv',
+      apiAll: {
+        api_key: 'e38bdf09ce9b884140ee0902c3248991',
+        language: 'it-IT',
+        query: ''
+      },
+      
+      loading: false
     }
   },
   methods:{
-    iniziaRicerca(film){
-      this.searchFilm = film;
-          axios.get("https://api.themoviedb.org/3/search/movie", {
-        params:{
-          api_key: "e38bdf09ce9b884140ee0902c3248991",
-          query : this.searchFilm
-        }
-      })
-        .then( r => {
-          this.search = r.data.results;
-          console.log(r);
+    getFilm(titolo){
+      this.apiAll.query = titolo;
+      this.loading = true;
+      axios 
+        .get(this.urlMovie, {params: this.apiAll})
+        .then((response) =>{
+          this.films = response.data.results;
+          this.loading = false;
+          
         })
-        .catch( e => {
-          console.log(e);
-        });
+        .catch((error) =>{
+          console.log(error);
+        })
+      axios
+        .get(this.urlTv, {params: this.apiAll})
+        .then((response) =>{
+          this.series = response.data.results;
+          this.loading = false;
+        })
+        .catch((error) =>{
+          console.log(error);
+        })
+    },
+    foundType(tipo){
+      this.type = tipo;
+      console.log(this.type);
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import "./assets/style/vars.scss";
-@import "./assets/style/utilities.scss";
-@import "./assets/style/general.scss";
+@import './assets/style/general.scss';
+@import './assets/style/vars.scss';
 </style>
